@@ -2,7 +2,7 @@
 par Omar Gonin et Andrea Ferrer
 
 ## Contexte : d'où viennent les données, qui les a créées et dans quel contexte
-
+Les données viennent du site suivant: https://www.goflightlabs.com/
 ## Description Comment sont structurées les données ? Parler du format, des attributs et du type de données
 
 ## But: qu'est-ce que vous voulez découvrir ? Des tendances ? Vous voulez explorer ou expliquer?
