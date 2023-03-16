@@ -26,5 +26,5 @@ Les données sont toutes des "strings".
 Nous souhaitons décrouvrir les statistiques par pays. L'utilisateur découvrira les données comme, le nombre de crash, une map des crash, le nombre de decès, le nombre de survivant, le dernier mot le plus dit. Notre objectif est d'attiser la curiosité de l'utilisateur en important des données étonnantes.
 ## Références
 De notre connaissance, cette base de donnée a été utilisé par 11 personnes différentes. Il est possible de voir qui elles sont à l'aide du lien suivant: https://www.kaggle.com/datasets/cgurkan/airplane-crash-data-since-1908/code?resource=download.
-##Wireframe
+## Wireframe
 Lien: https://www.figma.com/file/qi1yCTpVXUJCbFdy899HlV/visualDon-wireframe?node-id=0%3A1&t=HQ7zXbar4NE5tzwv-1
