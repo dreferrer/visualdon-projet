@@ -1,0 +1,22 @@
+{
+  "name": "visualdon-projet",
+  "version": "1.0.0",
+  "description": "par Omar Gonin et Andrea Ferrer",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dreferrer/visualdon-projet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dreferrer/visualdon-projet/issues"
+  },
+  "homepage": "https://github.com/dreferrer/visualdon-projet#readme",
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  }
+}
