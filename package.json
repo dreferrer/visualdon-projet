@@ -4,7 +4,9 @@
   "description": "par Omar Gonin et Andrea Ferrer",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel ../visualdon-projet/src/index.html",
+    "build": "parcel build"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,9 @@
   "homepage": "https://github.com/dreferrer/visualdon-projet#readme",
   "devDependencies": {
     "parcel": "^2.8.3"
+  },
+  "dependencies": {
+    "d3-fetch": "^3.0.1",
+    "d3-selection": "^3.0.0"
   }
 }
