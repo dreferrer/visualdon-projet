@@ -1,7 +1,31 @@
 :root{
-    --background-color: black;
+    --background-color: #2a2b33;
+    --text-color: #fff;
 }
 
 body{
     font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--background-color); 
+}
+
+h1{
+    color: var(--text-color);
+}
+
+p{
+    color: var(--text-color);
+}   
+
+button{
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#footer-p{
+    color: var(--text-color);
+    font-size: 10px;
 }
