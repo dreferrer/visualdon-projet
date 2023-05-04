@@ -42,7 +42,6 @@ object.addEventListener('load', function() {
 const displayCountryData = (countryName, data) => {
   //faire que la section de l'europe disparaisse
 
-  //
   const country = countryName;
   //get the div with class displayed and change it to hidden
   const europe = document.querySelector('.displayed');
@@ -54,11 +53,19 @@ const displayCountryData = (countryName, data) => {
   countryDiv.classList.remove('hidden');
   countryDiv.classList.add('displayed');
 
+  const svg = object.contentDocument.querySelector('svg');
+  const path = svg.querySelector(`path[name="${country}"]`);
+  console.log('path: ', path)
+
   const html = `
   <h1>${countryName}</h1>
+  <svg viewBox="0 0 20 20" width="200" height="200" >
+  ${path}
+  </svg>
   <p>Salut toi 👋, C’est bientôt l’été, les vacances, le temps de prendre l’avion ! Qu’en dis-tu d’en savoir plus sur ces anges de fer qui survolent notre ciel ?
   Savais-tu qu’il  y a eu ${data.length} crash d’avions en ${countryName} depuis 1900. Tu peux voir à gauche le lieu de ces crashs!
   Scroll si tu as le courage d’en découvrir plus sur ces crashs😈</p>`
+  //insert path in the svg with id countryOutline
 
 
 
