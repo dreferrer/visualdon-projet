@@ -1,16 +1,19 @@
 import { csv } from "d3-fetch";
 
-/* csv("./data/crashDataSet.csv")
+csv("./data/crashDataSet.csv")
   .then(function (data) {
     console.log("data 1", data);
 
-    data.forEach(function (d) {
-      console.log("les colonnes :  ", d); // Affiche les valeurs de chaque ligne
-    });
+    // data.forEach(function (d) {
+    //   console.log("le pays :  ", d.Location.split(' ').pop()); // Affiche les valeurs de chaque ligne
+    // });
+    const countryData = data.filter(d => d.Location.split(' ').pop() === 'Switzerland');
+    console.log("country data", countryData)
+    displayCountryData('Switzerland', countryData)
   })
   .catch(function (error) {
     console.log("il y a une erreur : ", error);
-  }); */
+  }); 
 
 // Sélectionne l'élément object contenant le SVG
 const object = document.querySelector('#map object');
@@ -26,7 +29,7 @@ object.addEventListener('load', function() {
   // Boucle à travers les pays et ajoute un événement de clic à chacun
   countries.forEach(function(country) {
     // Récupère l'ID du pays dans l'attribut "id" de l'élément path
-    const countryId = country.getAttribute("id");
+    const countryId = country.getAttribute("name");
 
     // Ajoute un événement de clic à l'élément path du pays
     country.addEventListener("click", function() {
@@ -35,3 +38,31 @@ object.addEventListener('load', function() {
     });
   });
 });
+
+const displayCountryData = (countryName, data) => {
+  //faire que la section de l'europe disparaisse
+
+  //
+  const country = countryName;
+  //get the div with class displayed and change it to hidden
+  const europe = document.querySelector('.displayed');
+  europe.classList.remove('displayed');
+  europe.classList.add('hidden');
+
+  //select the div with the id "country" and change it to displayed
+  const countryDiv = document.querySelector('#country');
+  countryDiv.classList.remove('hidden');
+  countryDiv.classList.add('displayed');
+
+  const html = `
+  <h1>${countryName}</h1>
+  <p>Salut toi 👋, C’est bientôt l’été, les vacances, le temps de prendre l’avion ! Qu’en dis-tu d’en savoir plus sur ces anges de fer qui survolent notre ciel ?
+  Savais-tu qu’il  y a eu ${data.length} crash d’avions en ${countryName} depuis 1900. Tu peux voir à gauche le lieu de ces crashs!
+  Scroll si tu as le courage d’en découvrir plus sur ces crashs😈</p>`
+
+
+
+  //insère le html dans la div country
+  countryDiv.innerHTML = html;
+
+}
