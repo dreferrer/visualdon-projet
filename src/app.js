@@ -1,7 +1,6 @@
 // import { csv } from "d3-fetch";
 import * as d3 from "d3";
 
-
 d3.csv("./data/crashDataSet.csv")
   .then(function (data) {
     console.log("data 1", data);
@@ -75,137 +74,176 @@ const displayCountryData = (countryName, data) => {
 
 
   // partie 2 
-
   let ampmResult = '';
 
   let amPmData = [
-    {label: 'AM', value: 0},
-    {label: 'PM', value: 0}
+    {info: 'pourcentage', am: 0, pm: 0}
   ]
 
   for (let i = 0; i < data.length; i++) {
     if(data[i].Time === '') continue;
     let hour = parseInt(data[i].Time.split(':')[0]);
     if (hour < 12) {
-      amPmData[0].value++;
+      amPmData[0].am++;
     }
     else {
-      amPmData[1].value++;
+      amPmData[0].pm++;
     }
   }
 
-  if(amPmData[0].value > amPmData[1].value){
+  if(amPmData[0].am > amPmData[0].pm){
     ampmResult = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre minuit et midi 😈`
   } else {
     ampmResult = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre midi et minuit 😈`
   }
 
 
-  console.log('STACKED BAR : ', stackedBar(amPmData, {
-    colors: ['#ff616b', '#fa9442', '#bf36e0']
-  }))
+  // console.log('STACKED BAR : ', createBarplot(amPmData))
+  console.log('STACKED BAR ', info2Chart(amPmData))
   
   const info2 = `À gauche, tu peux voir le pourcentage des crash entre minuit et midi (AM) 
   et entre midi et minuit (PM). 
   ${ampmResult} `
 
-  const info2Div = document.querySelector('#info2')
+  const info2Div = document.querySelector('#info2Chart')
   info2Div.innerHTML = info2;
 
   console.log(info2)
 }
 
 //FONCTION POUR STACKED BAR PRISE DE https://observablehq.com/@eesur/d3-single-stacked-bar
-function stackedBar (data, {
-  height = 200,
-  width = 1000,
-  barHeight = 100,
-  halfBarHeight = barHeight / 2,
-  f = d3.format('.1f'),
-  margin = {top: 20, right: 10, bottom: 20, left: 10},
-  w = width - margin.left - margin.right,
-  h = height * 0.66,
-  colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33"]
-} = {}) {
+// function createBarplot(data) {
+//   const margin = {top: 20, right: 20, bottom: 30, left: 50};
+//   const width = 500 - margin.left - margin.right;
+//   const height = 100 - margin.top - margin.bottom;
 
-  // Have a total of values for reference from the data:
-  const total = d3.sum(data, d => d.value);
-  console.info('total', total);
+//   // create SVG element
+//   const svg = d3.select("body")
+//     .append("svg")
+//     .attr("width", width + margin.left + margin.right)
+//     .attr("height", height + margin.top + margin.bottom)
+//     .append("g")
+//     .attr("transform",
+//       "translate(" + margin.left + "," + margin.top + ")");
 
-  // Format the data (instead of using d3.stack()) and filter out 0 values:
-  function groupDataFunc(data) {
-    // use a scale to get percentage values
-    const percent = d3.scaleLinear()
-      .domain([0, total])
-      .range([0, 100])
-    // filter out data that has zero values
-    // also get mapping for next placement
-    // (save having to format data for d3 stack)
-    let cumulative = 0
-    const _data = data.map(d => {
-      cumulative += d.value
-      return {
-        value: d.value,
-        // want the cumulative to prior value (start of rect)
-        cumulative: cumulative - d.value,
-        label: d.label,
-        percent: percent(d.value)
-      }
-    }).filter(d => d.value > 0)
-    return _data
+//   // create x and y scales
+//   const xScale = d3.scaleLinear()
+//     .domain([0, d3.max(data, d => d.value)])
+//     .range([0, width]);
+
+//   const yScale = d3.scaleBand()
+//     .range([height, 0])
+//     .domain(data.map(d => d.label))
+//     .padding(0.1);
+
+//   // add bars to SVG
+//   svg.selectAll(".bar")
+//     .data(data)
+//     .enter().append("rect")
+//     .attr("class", "bar")
+//     .attr("x", 0)
+//     .attr("y", d => yScale(d.label))
+//     .attr("width", d => xScale(d.value))
+//     .attr("height", yScale.bandwidth())
+//     .style("fill", "steelblue");
+
+//   // add x axis to SVG
+//   svg.append("g")
+//     .attr("transform", "translate(0," + height + ")")
+//     .call(d3.axisBottom(xScale));
+
+//   // add y axis to SVG
+//   svg.append("g")
+//     .call(d3.axisLeft(yScale));
+// }
+
+const info2Chart = (data) => {
+  var chart = d3.select('#testId')
+  var margin = {
+    top: 50,
+    right: 0,
+    bottom: 20,
+    left: 30,
   };
+  var width = chart.attr('width') - margin.left - margin.right;
+  var height = chart.attr('height') - margin.top - margin.bottom;
+  var innerChart = chart.append('g')
+  .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
-  const groupData = groupDataFunc(data);
-  console.info('groupData', groupData);
+  var pFormat = d3.format('.2r');
 
-  //FIXME:
+var total = d3.sum(data, function(d) { return d.am + d.pm; });
 
-  const svg = DOM.svg(width, height);
-  const sel = d3.select(svg);
-  
-  // set up scales for horizontal placement
-  const xScale = d3.scaleLinear()
-    .domain([0, total])
-    .range([0, w]);
+data.map(function(d) {
+  d.am = d.am / total;
+  d.pm = d.pm / total;
+});
 
-  const join = sel.selectAll('g')
-    .data(groupData)
-    .join('g')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+var x = d3.scaleLinear()
+  .domain([0, d3.max([
+    d3.max(data, function(d) { return d.am; }),
+    d3.max(data, function(d) { return d.pm; })
+   ])])
+  .rangeRound([0, width / 2]);
 
-  // stack rect for each data value
-  join.append('rect')
-    .attr('class', 'rect-stacked')
-    .attr('x', d => xScale(d.cumulative))
-    .attr('y', h / 2 - halfBarHeight)
-    .attr('height', barHeight)
-    .attr('width', d => xScale(d.value))
-    .style('fill', (d, i) => colors[i]);
+  var y = d3.scaleBand()
+  .domain(data.map(function(d) { return d.info; }))
+  .rangeRound([0, height]);
 
-  // add values on bar
-  join.append('text')
-    .attr('class', 'text-value')
-    .attr('text-anchor', 'middle')
-    .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
-    .attr('y', (h / 2) + 5)
-    .text(d => d.value);
+  var info = innerChart.selectAll('g')
+  .data(data)
+  .enter()
+  .append('g')
+  .attr('transform', function(d, i) {
+    return 'translate(0, ' + (i * y.bandwidth()) + ')';
+  });
 
-  // add some labels for percentages
-  join.append('text')
-    .attr('class', 'text-percent')
-    .attr('text-anchor', 'middle')
-    .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
-    .attr('y', (h / 2) - (halfBarHeight * 1.1))
-    .text(d => f(d.percent) + ' %');
+  info.append('rect')
+  .attr('class', 'bar bar--female')
+  .attr('x', function(d) { return (width / 2) - x(d.am); })
+  .attr('width', function(d) { return x(d.am); })
+  .attr('height', y.bandwidth());
 
-  // add the labels
-  join.append('text')
-    .attr('class', 'text-label')
-    .attr('text-anchor', 'middle')
-    .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
-    .attr('y', (h / 2) + (halfBarHeight * 1.1) + 20)
-    .style('fill', (d, i) => colors[i])
-    .text(d => d.label);
-  
-  return svg;
+  info.append('text')
+  .attr('class', 'label')
+  .attr('alignment-baseline', 'middle')
+  .attr('x', function(d) { return (width / 2) - x(d.am) + 4; })
+  .attr('y', y.bandwidth() / 2)
+  .text(function(d) {
+    return pFormat(d.am * 100);
+  });
+
+  info.append('rect')
+  .attr('class', 'bar bar--male')
+  .attr('x', width / 2)
+  .attr('width', function(d) { return x(d.pm); })
+  .attr('height', y.bandwidth());
+
+  info.append('text')
+  .attr('class', 'label')
+  .attr('alignment-baseline', 'middle')
+  .attr('text-anchor', 'end')
+  .attr('x', function(d) { return (width / 2) + x(d.pm) - 4; })
+  .attr('y', y.bandwidth() / 2)
+  .text(function(d) {
+    return pFormat(d.pm * 100);
+  });
+
+  innerChart.append('g')
+  .attr('class', 'axis axis--y')
+  .call(d3.axisLeft(y));
+
+  chart.append('text')
+  .attr('class', 'axis axis--x')
+  .attr('x', width / 4)
+  .attr('y', height + margin.top + margin.bottom)
+  .attr('text-anchor', 'middle')
+  .text('AM');
+
+  chart.append('text')
+  .attr('class', 'axis axis--x')
+  .attr('x', width * .75)
+  .attr('y', height + margin.top + margin.bottom)
+  .attr('text-anchor', 'middle')
+  .text('PM');
 }

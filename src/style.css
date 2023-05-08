@@ -38,3 +38,12 @@ button{
     display: none;
 }
 
+.bar--female { 
+    fill: #0CFFF0; 
+    stroke: #0CFFF0; 
+    stroke-width: 2px 0px 2px 2px;
+}
+
+.bar--male   {
+     fill: #FF9900; 
+    }
