@@ -8,7 +8,7 @@ d3.csv("./data/crashDataSet.csv")
     // data.forEach(function (d) {
     //   console.log("le pays :  ", d.Location.split(' ').pop()); // Affiche les valeurs de chaque ligne
     // });
-    const countryData = data.filter(d => d.Location.split(' ').pop() === 'Switzerland');
+    const countryData = data.filter(d => d.Location.split(' ').pop() === 'Germany');
     console.log("country data", countryData)
     displayCountryData('Switzerland', countryData)
   })
@@ -108,54 +108,42 @@ const displayCountryData = (countryName, data) => {
   const info2Div = document.querySelector('#info2Chart')
   info2Div.innerHTML = info2;
 
-  console.log(info2)
+  // PARTE 4 
+  console.log('data', data)
+  let operatorData = []
+  let mostCrashes = ''
+  data.forEach(function (d) {
+    //if the operator is not in the array, add it like this : {operator: 'operatorName', count: 1}
+    //if the operator is already in the array, increment the count by 1
+    let operator = d.Operator;
+    let operatorIndex = operatorData.findIndex(function (element) {
+      return element.operator === operator;
+    }
+    )
+    if (operatorIndex === -1) {
+      operatorData.push({ operator: operator, count: 1 })
+    }
+    else {
+      operatorData[operatorIndex].count++;
+    }
+  })
+
+  //get the operator with the highest count
+  let highestCount = 0;
+  operatorData.forEach(function (d) {
+    if (d.count > highestCount) {
+      highestCount = d.count;
+      mostCrashes = d.operator;
+    }
+  })
+  console.log('operatorData', operatorData)
+  console.log('mostCrashes', mostCrashes)
+
+  const info4 = `En ${countryName}, Si tu veux avoir le moins de chance de crasher, évite de prendre la compagnie ${mostCrashes}, pas besoin de nous remercier 😘😈`
+
+  createBarChart(operatorData);
+
 }
-
-//FONCTION POUR STACKED BAR PRISE DE https://observablehq.com/@eesur/d3-single-stacked-bar
-// function createBarplot(data) {
-//   const margin = {top: 20, right: 20, bottom: 30, left: 50};
-//   const width = 500 - margin.left - margin.right;
-//   const height = 100 - margin.top - margin.bottom;
-
-//   // create SVG element
-//   const svg = d3.select("body")
-//     .append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//     .attr("transform",
-//       "translate(" + margin.left + "," + margin.top + ")");
-
-//   // create x and y scales
-//   const xScale = d3.scaleLinear()
-//     .domain([0, d3.max(data, d => d.value)])
-//     .range([0, width]);
-
-//   const yScale = d3.scaleBand()
-//     .range([height, 0])
-//     .domain(data.map(d => d.label))
-//     .padding(0.1);
-
-//   // add bars to SVG
-//   svg.selectAll(".bar")
-//     .data(data)
-//     .enter().append("rect")
-//     .attr("class", "bar")
-//     .attr("x", 0)
-//     .attr("y", d => yScale(d.label))
-//     .attr("width", d => xScale(d.value))
-//     .attr("height", yScale.bandwidth())
-//     .style("fill", "steelblue");
-
-//   // add x axis to SVG
-//   svg.append("g")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(d3.axisBottom(xScale));
-
-//   // add y axis to SVG
-//   svg.append("g")
-//     .call(d3.axisLeft(yScale));
-// }
 
 const info2Chart = (data) => {
   var chart = d3.select('#testId')
@@ -247,3 +235,56 @@ var x = d3.scaleLinear()
   .attr('text-anchor', 'middle')
   .text('PM');
 }
+
+
+function createBarChart(data) {
+  const svg = d3.select("#info4Svg")
+
+  const margin = {top: 20, right: 20, bottom: 30, left: 50};
+  const width = +svg.attr("width") - margin.left - margin.right;
+  const height = +svg.attr("height") - margin.top - margin.bottom;
+
+  const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
+  const y = d3.scaleLinear().rangeRound([height, 0]);
+
+  const g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  // sort the data in descending order based on count
+  data.sort((a, b) => b.count - a.count);
+
+  // select only the first 5 elements of the sorted data
+  data = data.slice(0, 5);
+
+  x.domain(data.map(d => d.operator));
+  y.domain([0, d3.max(data, d => d.count)]);
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y))
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "end")
+      .text("Count");
+
+  g.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", d => x(d.operator))
+      .attr("y", d => y(d.count))
+      .attr("width", x.bandwidth())
+      .attr("height", d => height - y(d.count))
+      .attr("fill", "green"); // set the fill color to green
+
+}
+
+createBarChart(data);
+
