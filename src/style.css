@@ -1,6 +1,6 @@
 :root{
-    --background-color: #2a2b33;
-    --text-color: #fff;
+    --background-color: #c26565;
+    --text-color: #ffffff;
 }
 
 body{
@@ -46,4 +46,19 @@ button{
 
 .bar--male   {
      fill: #FF9900; 
-    }
+}
+
+#info1Div, #info2Div, #info3Div, #info4Div{
+    /* put a row flex direction */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+}
+
+.infoText1, .infoText2, .infoText3, .infoText4{
+    width: 700px;
+    /* put a column flex direction */
+    margin-left: 50px;
+}

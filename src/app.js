@@ -1,4 +1,3 @@
-// import { csv } from "d3-fetch";
 import * as d3 from "d3";
 
 d3.csv("./data/crashDataSet.csv")
@@ -8,9 +7,9 @@ d3.csv("./data/crashDataSet.csv")
     // data.forEach(function (d) {
     //   console.log("le pays :  ", d.Location.split(' ').pop()); // Affiche les valeurs de chaque ligne
     // });
-    const countryData = data.filter(d => d.Location.split(' ').pop() === 'Germany');
+    const countryData = data.filter(d => d.Location.split(' ').pop() === 'Switzerland');
     console.log("country data", countryData)
-    displayCountryData('Switzerland', countryData)
+    displayOneCountry('Switzerland', countryData)
   })
   .catch(function (error) {
     console.log("il y a une erreur : ", error);
@@ -40,46 +39,57 @@ object.addEventListener('load', function() {
   });
 });
 
-const displayCountryData = (countryName, data) => {
+
+//📄🟦 La fonction displayOneCountry s'occupe d'ajouter la class 
+//displayed à la div oneCountry
+const displayOneCountry = (countryName, countryData) => {
   //faire que la section de l'europe disparaisse
 
   //get the div with class displayed and change it to hidden
   const europe = document.querySelector('.displayed');
   europe.classList.remove('displayed');
   europe.classList.add('hidden');
-
   //select the div with the id "country" and change it to displayed
-  const countryDiv = document.querySelector('#country');
-  console.log(countryDiv)
+  const countryDiv = document.querySelector('#oneCountry');
   countryDiv.classList.remove('hidden');
   countryDiv.classList.add('displayed');
 
-  // const svg = object.contentDocument.querySelector('svg');
-  // const path = svg.querySelector(`path[name="${country}"]`);
-  // console.log('path: ', path)
+  //display call displayCountryData
+  displayCountryData(countryName, countryData);
+}
 
-  const info1 = `
-  <h1>${countryName}</h1>
+//📄🟦 La fonction displayCountryData s'occupe d'afficher les données en 4 parties
+// Chaque partie est divisée en plusieurs parties : 
+  //info1Text : le texte de la partie 1
+  //info1Chart : le graphique de la partie 1
+//elles sont ensuite insérées dans le div avec l'id "info1Div"
+const displayCountryData = (countryName, data) => {
+  //TECHNICAL SECTION : LES LIGNES DE CODES SUIVANTES S'OCCUPE DE RECUPERER LES DIVS DE CHAQUE PARTIE
+  const countryNameH1 = document.querySelector('#countryName');
+  const info1Div = document.querySelector('#info1Div');
+  const info2Div = document.querySelector('#info2Div');
+  const info3Div = document.querySelector('#info3Div');
+  const info4Div = document.querySelector('#info4Div');
+
+  //📄🟦 PARTIE 1
+  countryNameH1.innerHTML = countryName;
+  const info1Text = `
   <svg viewBox="0 0 20 20" width="200" height="200" >
   
   </svg>
-  <p>Salut toi 👋, C’est bientôt l’été, les vacances, le temps de prendre l’avion ! Qu’en dis-tu d’en savoir plus sur ces anges de fer qui survolent notre ciel ?
+  <p class="infoText1">Salut toi 👋, C’est bientôt l’été, les vacances, le temps de prendre l’avion ! Qu’en dis-tu d’en savoir plus sur ces anges de fer qui survolent notre ciel ?
   Savais-tu qu’il  y a eu ${data.length} crash d’avions en ${countryName} depuis 1900. Tu peux voir à gauche le lieu de ces crashs!
   Scroll si tu as le courage d’en découvrir plus sur ces crashs😈</p>`
 
+  //TODO: info1Chart
+  //ajout du texte dans le div using insertAdjacentHTML
+  info1Div.insertAdjacentHTML('beforeend', info1Text);
 
-
-  //insère le html dans la div country
-  countryDiv.innerHTML = info1;
-
-
-  // partie 2 
-  let ampmResult = '';
-
+  //📄🟦 PARTIE 2 
+  let info2Text = '';
   let amPmData = [
-    {info: 'pourcentage', am: 0, pm: 0}
+    {info: '%', am: 0, pm: 0}
   ]
-
   for (let i = 0; i < data.length; i++) {
     if(data[i].Time === '') continue;
     let hour = parseInt(data[i].Time.split(':')[0]);
@@ -92,24 +102,23 @@ const displayCountryData = (countryName, data) => {
   }
 
   if(amPmData[0].am > amPmData[0].pm){
-    ampmResult = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre minuit et midi 😈`
+    info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre minuit et midi 😈`
   } else {
-    ampmResult = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre midi et minuit 😈`
+    info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre midi et minuit 😈`
   }
 
-
-  // console.log('STACKED BAR : ', createBarplot(amPmData))
-  console.log('STACKED BAR ', info2Chart(amPmData))
+  info2ChartFunction(amPmData);
   
-  const info2 = `À gauche, tu peux voir le pourcentage des crash entre minuit et midi (AM) 
+  const info2 = `
+  <p class="infoText2">  À gauche, tu peux voir le pourcentage des crash entre minuit et midi (AM) 
   et entre midi et minuit (PM). 
-  ${ampmResult} `
+  ${info2Text}</p> `
 
-  const info2Div = document.querySelector('#info2Chart')
-  info2Div.innerHTML = info2;
+  info2Div.insertAdjacentHTML('beforeend', info2);
 
-  // PARTE 4 
-  console.log('data', data)
+  //TODO: 📄🟦 PARTIE 3
+
+  //📄🟦 PARTIE 4 
   let operatorData = []
   let mostCrashes = ''
   data.forEach(function (d) {
@@ -136,17 +145,16 @@ const displayCountryData = (countryName, data) => {
       mostCrashes = d.operator;
     }
   })
-  console.log('operatorData', operatorData)
-  console.log('mostCrashes', mostCrashes)
 
-  const info4 = `En ${countryName}, Si tu veux avoir le moins de chance de crasher, évite de prendre la compagnie ${mostCrashes}, pas besoin de nous remercier 😘😈`
-
+  const info4Text = `<p class="infoText1">En ${countryName}, Si tu veux avoir le moins de chance de crasher, évite de prendre la compagnie ${mostCrashes}, pas besoin de nous remercier 😘😈 </p>`
   createBarChart(operatorData);
+
+  info4Div.insertAdjacentHTML('beforeend', info4Text);
 
 }
 
-const info2Chart = (data) => {
-  var chart = d3.select('#testId')
+const info2ChartFunction = (data) => {
+  var chart = d3.select('#info2Svg')
   var margin = {
     top: 50,
     right: 0,
@@ -285,6 +293,3 @@ function createBarChart(data) {
       .attr("fill", "green"); // set the fill color to green
 
 }
-
-createBarChart(data);
-
