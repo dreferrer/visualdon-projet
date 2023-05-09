@@ -1,5 +1,7 @@
 import * as d3 from "d3";
+import * as cloud from 'd3-cloud';
 
+//📄🟦 Récupère les donnée de crash
 d3.csv("./data/crashDataSet.csv")
   .then(function (data) {
     console.log("data 1", data);
@@ -14,6 +16,15 @@ d3.csv("./data/crashDataSet.csv")
   .catch(function (error) {
     console.log("il y a une erreur : ", error);
   }); 
+
+//📄🟦 Récupère les donnée de dernière parole
+d3.csv("./data/lastWords.csv")
+  .then(function (data) {
+    info3Stuff(data);
+  })
+  .catch(function (error) {
+    console.log("il y a une erreur : ", error);
+  });
 
 // Sélectionne l'élément object contenant le SVG
 const object = document.querySelector('#map object');
@@ -123,7 +134,7 @@ const displayCountryData = (countryName, data) => {
   }
   info2Stuff();
 
-  //TODO: 📄🟦 PARTIE 3
+
 
   //📄🟦 PARTIE 4 
   function info4Stuff() {
@@ -163,6 +174,54 @@ const displayCountryData = (countryName, data) => {
 
 }
 
+
+
+//TODO: 📄🟦 PARTIE 3
+//étant donnée que la partie 3 est la même pour tous les pays, elle n'est pas dans la fonction displayCountryData
+function info3Stuff(lastWordsData) {
+  console.log('last words', lastWordsData)
+  //make every word lowercase and remove the ,
+  lastWordsData.forEach(function (d) {
+    d.Last_words = d.Last_words.toLowerCase();
+    d.Last_words = d.Last_words.replace(',', '');
+  })
+
+
+  const lastWordsDataClean = [];
+
+  //go trough the lastWordsData array, foreach Last_words[i] seperate every word and add it to the lastWordsDataClean array like this : {word: 'word', count: 1}
+  //if the word is already in the array, increment the count by 1, if the word is smaller than 3 characters, don't add it
+  lastWordsData.forEach(function (d) {
+    let words = d.Last_words.split(' ');
+    words.forEach(function (word) {
+      if (word.length < 5) return;
+      let wordIndex = lastWordsDataClean.findIndex(function (element) {
+        return element.word === word;
+      })
+      if (wordIndex === -1) {
+        lastWordsDataClean.push({ word: word, size: 1 })
+      }
+      else {
+        lastWordsDataClean[wordIndex].size++;
+      }
+    })
+  }
+  )
+  //now make an array with ony the 7 most used words
+  let lastWordsDataCleanTop7 = lastWordsDataClean.sort(function (a, b) {
+    return b.size - a.size;
+  }
+  ).slice(0, 7);
+
+  console.log('last words clean', lastWordsDataCleanTop7)
+  wordCloudChart(lastWordsDataCleanTop7);
+}
+
+
+
+
+
+  //FONCTIONS DE CREATION DES CHARTS 
 const info2ChartFunction = (data) => {
   var chart = d3.select('#info2Svg')
   var margin = {
@@ -254,7 +313,6 @@ var x = d3.scaleLinear()
   .text('PM');
 }
 
-
 function createBarChart(data) {
   const svg = d3.select("#info4Svg")
 
@@ -301,5 +359,52 @@ function createBarChart(data) {
       .attr("width", x.bandwidth())
       .attr("height", d => height - y(d.count))
       .attr("fill", "green"); // set the fill color to green
+
+}
+
+// var data = [{word: "Running", size: "10"}, {word: "Shit", size: "30"},{word: "AAAAH", size: "7"},]
+function wordCloudChart(data) {
+  // set the dimensions and margins of the graph
+var margin = {top: 10, right: 10, bottom: 10, left: 10},
+width = 450 - margin.left - margin.right,
+height = 450 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#info3Svg").append("svg")
+.attr("width", width + margin.left + margin.right)
+.attr("height", height + margin.top + margin.bottom)
+.append("g")
+.attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+
+// Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
+// Wordcloud features that are different from one word to the other must be here
+var layout = cloud()
+.size([width, height])
+.words(data.map(function(d) { return {text: d.word, size:d.size}; }))
+.padding(5)        //space between words
+.rotate(function() { return ~~0})
+.fontSize(function(d) { return d.size * 5; })      // font size of words
+.on("end", draw);
+layout.start();
+
+// This function takes the output of 'layout' above and draw the words
+// Wordcloud features that are THE SAME from one word to the other can be here
+function draw(words) {
+svg
+.append("g")
+  .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+  .selectAll("text")
+    .data(words)
+  .enter().append("text")
+    .style("font-size", function(d) { return d.size; })
+    .style("fill", "#ffffff")
+    .attr("text-anchor", "middle")
+    .style("font-family", "Impact")
+    .attr("transform", function(d) {
+      return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+    })
+    .text(function(d) { return d.text; });
+}
 
 }
