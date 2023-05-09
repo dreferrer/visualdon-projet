@@ -72,84 +72,94 @@ const displayCountryData = (countryName, data) => {
   const info4Div = document.querySelector('#info4Div');
 
   //📄🟦 PARTIE 1
-  countryNameH1.innerHTML = countryName;
-  const info1Text = `
-  <svg viewBox="0 0 20 20" width="200" height="200" >
+  function info1Stuff() {
+    countryNameH1.innerHTML = countryName;
+    const info1Text = `
+    <svg viewBox="0 0 20 20" width="200" height="200" >
+    
+    </svg>
+    <p class="infoText1">Salut toi 👋, C’est bientôt l’été, les vacances, le temps de prendre l’avion ! Qu’en dis-tu d’en savoir plus sur ces anges de fer qui survolent notre ciel ?
+    Savais-tu qu’il  y a eu ${data.length} crash d’avions en ${countryName} depuis 1900. Tu peux voir à gauche le lieu de ces crashs!
+    Scroll si tu as le courage d’en découvrir plus sur ces crashs😈</p>`
   
-  </svg>
-  <p class="infoText1">Salut toi 👋, C’est bientôt l’été, les vacances, le temps de prendre l’avion ! Qu’en dis-tu d’en savoir plus sur ces anges de fer qui survolent notre ciel ?
-  Savais-tu qu’il  y a eu ${data.length} crash d’avions en ${countryName} depuis 1900. Tu peux voir à gauche le lieu de ces crashs!
-  Scroll si tu as le courage d’en découvrir plus sur ces crashs😈</p>`
+    //TODO: info1Chart
+    //ajout du texte dans le div using insertAdjacentHTML
+    info1Div.insertAdjacentHTML('beforeend', info1Text);
+  }
+  info1Stuff();
 
-  //TODO: info1Chart
-  //ajout du texte dans le div using insertAdjacentHTML
-  info1Div.insertAdjacentHTML('beforeend', info1Text);
 
   //📄🟦 PARTIE 2 
-  let info2Text = '';
-  let amPmData = [
-    {info: '%', am: 0, pm: 0}
-  ]
-  for (let i = 0; i < data.length; i++) {
-    if(data[i].Time === '') continue;
-    let hour = parseInt(data[i].Time.split(':')[0]);
-    if (hour < 12) {
-      amPmData[0].am++;
+  function info2Stuff() {
+    let info2Text = '';
+    let amPmData = [
+      {info: '%', am: 0, pm: 0}
+    ]
+    for (let i = 0; i < data.length; i++) {
+      if(data[i].Time === '') continue;
+      let hour = parseInt(data[i].Time.split(':')[0]);
+      if (hour < 12) {
+        amPmData[0].am++;
+      }
+      else {
+        amPmData[0].pm++;
+      }
     }
-    else {
-      amPmData[0].pm++;
-    }
-  }
-
-  if(amPmData[0].am > amPmData[0].pm){
-    info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre minuit et midi 😈`
-  } else {
-    info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre midi et minuit 😈`
-  }
-
-  info2ChartFunction(amPmData);
   
-  const info2 = `
-  <p class="infoText2">  À gauche, tu peux voir le pourcentage des crash entre minuit et midi (AM) 
-  et entre midi et minuit (PM). 
-  ${info2Text}</p> `
-
-  info2Div.insertAdjacentHTML('beforeend', info2);
+    if(amPmData[0].am > amPmData[0].pm){
+      info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre minuit et midi 😈`
+    } else {
+      info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre midi et minuit 😈`
+    }
+  
+    info2ChartFunction(amPmData);
+    
+    const info2 = `
+    <p class="infoText2">  À gauche, tu peux voir le pourcentage des crash entre minuit et midi (AM) 
+    et entre midi et minuit (PM). 
+    ${info2Text}</p> `
+  
+    info2Div.insertAdjacentHTML('beforeend', info2);
+  }
+  info2Stuff();
 
   //TODO: 📄🟦 PARTIE 3
 
   //📄🟦 PARTIE 4 
-  let operatorData = []
-  let mostCrashes = ''
-  data.forEach(function (d) {
-    //if the operator is not in the array, add it like this : {operator: 'operatorName', count: 1}
-    //if the operator is already in the array, increment the count by 1
-    let operator = d.Operator;
-    let operatorIndex = operatorData.findIndex(function (element) {
-      return element.operator === operator;
-    }
-    )
-    if (operatorIndex === -1) {
-      operatorData.push({ operator: operator, count: 1 })
-    }
-    else {
-      operatorData[operatorIndex].count++;
-    }
-  })
-
-  //get the operator with the highest count
-  let highestCount = 0;
-  operatorData.forEach(function (d) {
-    if (d.count > highestCount) {
-      highestCount = d.count;
-      mostCrashes = d.operator;
-    }
-  })
-
-  const info4Text = `<p class="infoText1">En ${countryName}, Si tu veux avoir le moins de chance de crasher, évite de prendre la compagnie ${mostCrashes}, pas besoin de nous remercier 😘😈 </p>`
-  createBarChart(operatorData);
-
-  info4Div.insertAdjacentHTML('beforeend', info4Text);
+  function info4Stuff() {
+    let operatorData = []
+    let mostCrashes = ''
+    data.forEach(function (d) {
+      //if the operator is not in the array, add it like this : {operator: 'operatorName', count: 1}
+      //if the operator is already in the array, increment the count by 1
+      let operator = d.Operator;
+      let operatorIndex = operatorData.findIndex(function (element) {
+        return element.operator === operator;
+      }
+      )
+      if (operatorIndex === -1) {
+        operatorData.push({ operator: operator, count: 1 })
+      }
+      else {
+        operatorData[operatorIndex].count++;
+      }
+    })
+  
+    //get the operator with the highest count
+    let highestCount = 0;
+    operatorData.forEach(function (d) {
+      if (d.count > highestCount) {
+        highestCount = d.count;
+        mostCrashes = d.operator;
+      }
+    })
+  
+    const info4Text = `<p class="infoText1">En ${countryName}, Si tu veux avoir le moins de chance de crasher, évite de prendre la compagnie ${mostCrashes}, pas besoin de nous remercier 😘😈 </p>`
+    createBarChart(operatorData);
+  
+    info4Div.insertAdjacentHTML('beforeend', info4Text);
+  }
+  info4Stuff();
 
 }
 
