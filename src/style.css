@@ -48,6 +48,14 @@ button{
      fill: #FF9900; 
 }
 
+#countryName {
+    font-size: 50px;
+    font-weight: bold;
+    margin: 10px;
+    /* center */
+    text-align: center;
+    color: var(--text-color);
+}
 #info1Div, #info2Div, #info3Div, #info4Div{
     /* put a row flex direction */
     display: flex;
