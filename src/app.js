@@ -1,31 +1,6 @@
 import * as d3 from "d3";
 import * as cloud from 'd3-cloud';
 
-//📄🟦 Récupère les donnée de crash
-d3.csv("./data/crashDataSet.csv")
-  .then(function (data) {
-    console.log("data 1", data);
-
-    // data.forEach(function (d) {
-    //   console.log("le pays :  ", d.Location.split(' ').pop()); // Affiche les valeurs de chaque ligne
-    // });
-    const countryData = data.filter(d => d.Location.split(' ').pop() === 'Switzerland');
-    console.log("country data", countryData)
-    displayOneCountry('Switzerland', countryData)
-  })
-  .catch(function (error) {
-    console.log("il y a une erreur : ", error);
-  }); 
-
-//📄🟦 Récupère les donnée de dernière parole
-d3.csv("./data/lastWords.csv")
-  .then(function (data) {
-    info3Stuff(data);
-  })
-  .catch(function (error) {
-    console.log("il y a une erreur : ", error);
-  });
-
 // Sélectionne l'élément object contenant le SVG
 const object = document.querySelector('#map object');
 
@@ -45,11 +20,96 @@ object.addEventListener('load', function() {
     // Ajoute un événement de clic à l'élément path du pays
     country.addEventListener("click", function() {
       // Affiche l'ID du pays dans la console
-      console.log(countryId);
+      getData(countryId)
     });
   });
 });
 
+//random country stuff 
+const randomButton = document.querySelector('#random-button')
+randomButton.addEventListener('click', () => {
+  const europeanCountries = [
+    "Albania",
+    "Andorra",
+    "Armenia",
+    "Austria",
+    "Azerbaijan",
+    "Belarus",
+    "Belgium",
+    "Bosnia and Herzegovina",
+    "Bulgaria",
+    "Croatia",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Estonia",
+    "Finland",
+    "France",
+    "Georgia",
+    "Germany",
+    "Greece",
+    "Hungary",
+    "Iceland",
+    "Ireland",
+    "Italy",
+    "Kazakhstan",
+    "Kosovo",
+    "Latvia",
+    "Liechtenstein",
+    "Luxembourg",
+    "Malta",
+    "Moldova",
+    "Monaco",
+    "Montenegro",
+    "Netherlands",
+    "North Macedonia",
+    "Norway",
+    "Poland",
+    "Portugal",
+    "Romania",
+    "Russia",
+    "San Marino",
+    "Serbia",
+    "Slovakia",
+    "Slovenia",
+    "Spain",
+    "Sweden",
+    "Switzerland",
+    "Turkey",
+    "Ukraine",
+    "United Kingdom",
+    "Vatican City"
+  ];
+  const randomCountry = europeanCountries[Math.floor(Math.random() * europeanCountries.length)];
+
+  // Log the random country to the console
+  getData(randomCountry)
+})
+
+//📄🟦 Récupère les donnée de crash
+function getData(country) {
+  d3.csv("./data/crashDataSet.csv")
+  .then(function (data) {
+    // data.forEach(function (d) {
+    //   console.log("le pays :  ", d.Location.split(' ').pop()); // Affiche les valeurs de chaque ligne
+    // });
+    const countryData = data.filter(d => d.Location.split(' ').pop() === country);
+    console.log("country data", countryData)
+    displayOneCountry(country, countryData)
+  })
+  .catch(function (error) {
+    console.log("il y a une erreur : ", error);
+  }); 
+}
+
+//📄🟦 Récupère les donnée de dernière parole
+d3.csv("./data/lastWords.csv")
+  .then(function (data) {
+    info3Stuff(data);
+  })
+  .catch(function (error) {
+    console.log("il y a une erreur : ", error);
+  });
 
 //📄🟦 La fonction displayOneCountry s'occupe d'ajouter la class 
 //displayed à la div oneCountry
@@ -214,10 +274,6 @@ function info3Stuff(lastWordsData) {
   console.log('last words clean', lastWordsDataCleanTop7)
   wordCloudChart(lastWordsDataCleanTop7);
 }
-
-
-
-
 
   //FONCTIONS DE CREATION DES CHARTS 
 const info2ChartFunction = (data) => {
@@ -410,6 +466,20 @@ svg
 }
 
 }
+
+
+//backArrow stuff
+function backArrowStuff() {
+  const backArrow = document.querySelector("#backArrow");
+
+  // Add onclick event listener
+  backArrow.addEventListener("click", function() {
+    location.reload()
+
+  });
+}
+
+backArrowStuff()
 
 
 //🌅GRADIENTS : 

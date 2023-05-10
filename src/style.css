@@ -14,6 +14,8 @@ h1{
 
 p{
     color: var(--text-color);
+    font-size: 17px;
+    font-weight: 500;
 }   
 
 button{
@@ -84,3 +86,37 @@ button{
     color: white;
     fill: white;
 }
+
+#backArrow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 10px;
+    /* Add your other styling properties here */
+}
+
+#random-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-left: 10px;
+    padding-right: 10px;
+    align-items: center;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    box-sizing: border-box;
+    width: 201.18px;
+    height: 53px;
+    background: radial-gradient(82.21% 148.31% at 49.5% 105.07%, #2C347D 0%, rgba(76, 82, 135, 0) 100%);
+    border: 1px solid #29306C;
+    border-radius: 54.5px;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  #random-button:hover {
+    background: radial-gradient(82.21% 148.31% at 49.5% 105.07%, #5F67B3 0%, rgba(111, 113, 171, 0) 100%);
+    background-size: 200% 200%; /* Increase the size to smoothly transition */
+    background-position: 50% 50%; /* Center the background position */
+  }
+  
