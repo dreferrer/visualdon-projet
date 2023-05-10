@@ -174,9 +174,7 @@ const displayCountryData = (countryName, data) => {
 
 }
 
-
-
-//TODO: 📄🟦 PARTIE 3
+//📄🟦 PARTIE 3
 //étant donnée que la partie 3 est la même pour tous les pays, elle n'est pas dans la fonction displayCountryData
 function info3Stuff(lastWordsData) {
   console.log('last words', lastWordsData)
@@ -230,8 +228,9 @@ const info2ChartFunction = (data) => {
     bottom: 20,
     left: 30,
   };
+
   var width = chart.attr('width') - margin.left - margin.right;
-  var height = chart.attr('height') - margin.top - margin.bottom;
+  var height = 100;
   var innerChart = chart.append('g')
   .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
@@ -274,6 +273,9 @@ var x = d3.scaleLinear()
   .attr('alignment-baseline', 'middle')
   .attr('x', function(d) { return (width / 2) - x(d.am) + 4; })
   .attr('y', y.bandwidth() / 2)
+  .style('fill', '#B3FFFA')  // Set text color to white
+  .style('font-weight', 'bold')  // Make text bold
+  .style('font-size', '25px')  // Increase text size
   .text(function(d) {
     return pFormat(d.am * 100);
   });
@@ -282,7 +284,7 @@ var x = d3.scaleLinear()
   .attr('class', 'bar bar--male')
   .attr('x', width / 2)
   .attr('width', function(d) { return x(d.pm); })
-  .attr('height', y.bandwidth());
+  .attr('height', y.bandwidth())
 
   info.append('text')
   .attr('class', 'label')
@@ -290,6 +292,9 @@ var x = d3.scaleLinear()
   .attr('text-anchor', 'end')
   .attr('x', function(d) { return (width / 2) + x(d.pm) - 4; })
   .attr('y', y.bandwidth() / 2)
+  .style('fill', '#FFE1B5')  // Set text color to white
+  .style('font-weight', 'bold')  // Make text bold
+  .style('font-size', '25px')  // Increase text size
   .text(function(d) {
     return pFormat(d.pm * 100);
   });
@@ -314,17 +319,16 @@ var x = d3.scaleLinear()
 }
 
 function createBarChart(data) {
-  const svg = d3.select("#info4Svg")
+  const svg = d3.select("#info4Svg");
 
-  const margin = {top: 20, right: 20, bottom: 30, left: 50};
+  const margin = { top: 20, right: 20, bottom: 30, left: 50 };
   const width = +svg.attr("width") - margin.left - margin.right;
   const height = +svg.attr("height") - margin.top - margin.bottom;
 
   const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
   const y = d3.scaleLinear().rangeRound([height, 0]);
 
-  const g = svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // sort the data in descending order based on count
   data.sort((a, b) => b.count - a.count);
@@ -332,34 +336,32 @@ function createBarChart(data) {
   // select only the first 5 elements of the sorted data
   data = data.slice(0, 5);
 
-  x.domain(data.map(d => d.operator));
-  y.domain([0, d3.max(data, d => d.count)]);
+  x.domain(data.map((d) => d.operator));
+  y.domain([0, d3.max(data, (d) => d.count)]);
+
+  g.append("g").attr("class", "axis axis--x").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x));
 
   g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-  g.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y))
+    .attr("class", "axis axis--y")
+    .call(d3.axisLeft(y))
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "0.71em")
-      .attr("text-anchor", "end")
-      .text("Count");
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", "0.71em")
+    .attr("text-anchor", "end")
+    .text("Count");
 
   g.selectAll(".bar")
     .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", d => x(d.operator))
-      .attr("y", d => y(d.count))
-      .attr("width", x.bandwidth())
-      .attr("height", d => height - y(d.count))
-      .attr("fill", "green"); // set the fill color to green
-
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", (d) => x(d.operator))
+    .attr("y", (d) => y(d.count))
+    .attr("width", x.bandwidth())
+    .attr("height", (d) => height - y(d.count))
+    .attr("rx", 10) // Set the horizontal corner radius
+    .attr("ry", 10); // Set the vertical corner radius
 }
 
 // var data = [{word: "Running", size: "10"}, {word: "Shit", size: "30"},{word: "AAAAH", size: "7"},]
@@ -408,3 +410,54 @@ svg
 }
 
 }
+
+
+//🌅GRADIENTS : 
+// Define the gradient
+const svg = d3.select("#info4Svg")
+const gradient = svg.append("defs")
+  .append("linearGradient")
+  .attr("id", "bar-gradient")
+  .attr("gradientTransform", "rotate(90)");
+
+// Add color stops to the gradient
+gradient.append("stop")
+  .attr("offset", "0%")
+  .attr("stop-color", "#000000");
+
+gradient.append("stop")
+  .attr("offset", "100%")
+  .attr("stop-color", "#548800");
+
+
+  //dégradé orange
+  const svg2 = d3.select("#info2Svg")
+  const gradient2 = svg2.append("defs")
+    .append("linearGradient")
+    .attr("id", "orange-gradient")
+    .attr("gradientTransform", "rotate(120)");
+  
+  // Add color stops to the gradient
+  gradient2.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#FF990070");
+  
+  gradient2.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#FF990000");
+  
+  //dégradé bleu
+  const svg3 = d3.select("#info2Svg")
+  const gradient3 = svg3.append("defs")
+    .append("linearGradient")
+    .attr("id", "blue-gradient")
+    .attr("gradientTransform", "rotate(33)");
+  
+  // Add color stops to the gradient
+  gradient3.append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#0CFFF0");
+  
+  gradient3.append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#0CFFF000");
