@@ -120,3 +120,7 @@ button{
     background-position: 50% 50%; /* Center the background position */
   }
   
+
+  .axis--x, .axis--x {
+    fill: white !important; 
+  }
