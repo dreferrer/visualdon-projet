@@ -162,9 +162,9 @@ const displayCountryData = (countryName, data) => {
     <svg viewBox="0 0 20 20" width="200" height="200" >
     
     </svg>
-    <p class="infoText1">Salut toi 👋, C’est bientôt l’été, les vacances, le temps de prendre l’avion ! Qu’en dis-tu d’en savoir plus sur ces anges de fer qui survolent notre ciel ?
-    Savais-tu qu’il  y a eu ${data.length} crash d’avions en ${countryName} depuis 1900. Tu peux voir à gauche le lieu de ces crashs!
-    Scroll si tu as le courage d’en découvrir plus sur ces crashs😈</p>`
+    <p class="infoText1">Hey you 👋, It's almost summertime, which means that you will maybe have the chance to fly somewhere! Are you up to know more about these jets flying over us everyday ?
+    Did you know that they were ${data.length} crashes in ${countryName} since 1900? You can check on the right the differents places where the crashes happened!
+    We challenge you to scroll down to discover more about crashes in ${countryName}😈</p>`
   
     //TODO: info1Chart
     //ajout du texte dans le div using insertAdjacentHTML
@@ -191,16 +191,16 @@ const displayCountryData = (countryName, data) => {
     }
   
     if(amPmData[0].am > amPmData[0].pm){
-      info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre minuit et midi 😈`
+      info2Text = `As you can see in ${countryName}, you better have to travel between midnight and noon 😈`
     } else {
-      info2Text = `Comme tu peux le voir en ${countryName}, tu ferais mieux de voyager entre midi et minuit 😈`
+      info2Text = `As you can see in ${countryName}, you better have to travel between noon and midnight 😈`
     }
   
     info2ChartFunction(amPmData);
     
     const info2 = `
-    <p class="infoText2">  À gauche, tu peux voir le pourcentage des crash entre minuit et midi (AM) 
-    et entre midi et minuit (PM). 
+    <p class="infoText2">  On the left, you have an overview of the proportion of crash between midnight and noon (AM) 
+    and between noon and midnight (PM). 
     ${info2Text}</p> `
   
     info2Div.insertAdjacentHTML('beforeend', info2);
@@ -238,7 +238,7 @@ const displayCountryData = (countryName, data) => {
       }
     })
   
-    const info4Text = `<p class="infoText1">En ${countryName}, Si tu veux avoir le moins de chance de crasher, évite de prendre la compagnie ${mostCrashes}, pas besoin de nous remercier 😘😈 </p>`
+    const info4Text = `<p class="infoText1">In ${countryName}, if you want to have the most chances to stay alive, avoid using the airline ${mostCrashes}, no need to thank us 😘😈 </p>`
     createBarChart(operatorData);
   
     info4Div.insertAdjacentHTML('beforeend', info4Text);
