@@ -1,6 +1,8 @@
 import * as d3 from "d3";
 import * as cloud from 'd3-cloud';
 
+
+
 // Sélectionne l'élément object contenant le SVG
 const object = document.querySelector('#map object');
 
@@ -22,7 +24,18 @@ object.addEventListener('load', function() {
       // Affiche l'ID du pays dans la console
       getData(countryId)
     });
-  });
+
+    country.addEventListener("mouseenter", function() {
+      country.style.fill = "#cbd9fc";
+    });
+    
+    country.addEventListener("mouseout", function() {
+      country.style.fill = "#5c7bec";
+      country.removeEventListener('mouseenter', function() {
+        country.style.fill = "#cbd9fc";
+      });
+    });
+});
 });
 
 //random country stuff 
